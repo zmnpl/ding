@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"log"
 	"os"
 
@@ -11,26 +10,12 @@ import (
 	"github.com/zmnpl/ding/tui"
 )
 
-func flagUsage() {
-	fmt.Printf(`Usage: fast-p [OPTIONS]
-Reads a list of PDF filenames from STDIN and returns a list of null-byte
-separated items of the form filename[TAB]text
-where "text" is the text extracted from the first two pages of the PDF
-by pdftotext and [TAB] denotes a tab character "\t".
-
-Common usage of this tool is to pipe the result to FZF with a command in
-your .bashrc as explained in https://github.com/bellecp/fast-p.`)
-
-	flag.PrintDefaults()
-}
-
 func main() {
 	checkDeps := flag.Bool("checkDependencies", false, "Check external depencies for different programm functions")
 	tview := flag.Bool("ui", false, "Run with tview UI")
 	out := flag.String("out", core.Dest, "Root path of your documents directory; where the documents should go")
 	in := flag.String("in", core.Inbound, "Path where your scans / inbound documents land")
 
-	//flag.Usage = flagUsage
 	flag.Parse()
 
 	if _, err := os.Stat(*out); !os.IsNotExist(err) {
