@@ -43,15 +43,25 @@ func makeMoveCommand(fileName, newName, directoryName string) func() tea.Msg {
 }
 
 func (i inboundItem) makeOcrCommand(single bool) func() tea.Msg {
+
+	action := func() (string, error) {
+		err := core.OcrPdf(i.name)
+		message := "success"
+		if err != nil {
+			message = err.Error()
+		}
+		return message, err
+	}
+
 	if single {
 		return func() tea.Msg {
-			err := core.OcrPdf(i.name)
-			return ocrMessageSingle{message: "success", err: err}
+			message, err := action()
+			return ocrMessageSingle{message: message, err: err}
 		}
 	}
 
 	return func() tea.Msg {
-		err := core.OcrPdf(i.name)
-		return ocrMessageMulti{message: "success", err: err}
+		message, err := action()
+		return ocrMessageSingle{message: message, err: err}
 	}
 }

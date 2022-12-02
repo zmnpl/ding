@@ -51,8 +51,16 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		switch msg.String() {
 
-		case "ctrl+c", "q":
+		case "ctrl+c":
 			return m, tea.Quit
+
+		case "q":
+			switch m.focus {
+			case FOCUS_NEWNAME:
+				break
+			default:
+				return m, tea.Quit
+			}
 
 		case "enter":
 			switch m.focus {

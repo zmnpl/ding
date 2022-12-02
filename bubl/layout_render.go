@@ -7,33 +7,38 @@ import (
 // part renders
 
 func (m model) mainSection() string {
-	ms := lipgloss.JoinHorizontal(lipgloss.Top,
-		lipgloss.NewStyle().Margin(0, 1, 0, 0).Width(m.inboundColumnWidth).Render(m.inboundList.View()),
-		lipgloss.NewStyle().Margin(2, 1, 0, 0).Width(m.previewWidth).Render(myStyle.previewInactiveColorStyle.Render(m.preview.View())),
-		lipgloss.NewStyle().Margin(0, 1, 0, 0).Width(m.directoryColumnWidth).Render(m.directoryList.View()),
-		lipgloss.NewStyle().Margin(1, 0, 0, 0).Width(m.directoryFilesColumnWidth).Render(m.directoryFileList.View()),
-	)
+	// below is full screen layout
+	// ms := lipgloss.JoinHorizontal(lipgloss.Top,
+	// 	lipgloss.NewStyle().Margin(0, 1, 0, 0).Width(m.inboundColumnWidth).Render(m.inboundList.View()),
+	// 	lipgloss.NewStyle().Margin(2, 1, 0, 0).Width(m.previewWidth).Render(myStyle.previewInactiveColorStyle.Render(m.preview.View())),
+	// 	lipgloss.NewStyle().Margin(0, 1, 0, 0).Width(m.directoryColumnWidth).Render(m.directoryList.View()),
+	// 	lipgloss.NewStyle().Margin(1, 0, 0, 0).Width(m.directoryFilesColumnWidth).Render(m.directoryFileList.View()),
+	// )
 
 	if m.focus == FOCUS_INBOUND {
-		ms = lipgloss.JoinHorizontal(lipgloss.Top,
+		ms := lipgloss.JoinHorizontal(lipgloss.Top,
 			lipgloss.NewStyle().Margin(0, 1, 0, 0).Width(m.inboundColumnWidth).Render(m.inboundList.View()),
 			lipgloss.NewStyle().Margin(2, 1, 0, 0).Width(m.previewWidth).Render(myStyle.previewInactiveColorStyle.Render(m.preview.View())),
 		)
+		return ms
 
-	} else {
-		ms = lipgloss.JoinHorizontal(lipgloss.Top,
-			lipgloss.NewStyle().Margin(0, 1, 0, 0).Width(m.directoryColumnWidth).Render(m.directoryList.View()),
-			lipgloss.NewStyle().Margin(1, 0, 0, 0).Width(m.directoryFilesColumnWidth).Render(m.directoryFileList.View()),
-		)
 	}
 
+	ms := lipgloss.JoinHorizontal(lipgloss.Top,
+		lipgloss.NewStyle().Margin(0, 1, 0, 0).Width(m.directoryColumnWidth).Render(m.directoryList.View()),
+		lipgloss.NewStyle().Margin(1, 0, 0, 0).Width(m.directoryFilesColumnWidth).Render(m.directoryFileList.View()),
+	)
 	return ms
 }
 
 func (m model) selectedFile() string {
-	return lipgloss.NewStyle().Margin(1, 0, 0, 0).Padding(0, 0).Render("  " +
-		myStyle.titleStyle.Render("Selected File") + "  " +
-		m.inboundList.SelectedItem().(inboundItem).Title())
+	s := lipgloss.NewStyle().Margin(1, 0, 0, 0).Padding(0, 0).Render("  " +
+		myStyle.titleStyle.Render("Selected File") + "  ")
+
+	if m.inboundList.SelectedItem() != nil {
+		return s + m.inboundList.SelectedItem().(inboundItem).Title()
+	}
+	return s
 }
 
 func (m model) newNameSection() string {
